@@ -1,0 +1,150 @@
+### Exhibition Service API 테스트
+
+### 1. 전시회 생성 (먼저 실행)
+POST http://localhost:8082/exhibitions
+Content-Type: application/json
+
+{
+  "title": "인상주의 전시회",
+  "description": "클로드 모네와 인상주의 화가들의 작품을 감상할 수 있는 전시회입니다.",
+  "startDate": "2024-01-01T10:00:00",
+  "endDate": "2024-12-31T18:00:00",
+  "location": "국립현대미술관",
+  "status": "ACTIVE",
+  "imageUrl": "https://example.com/exhibition1.jpg"
+}
+
+###
+
+### 2. 모든 전시회 조회
+GET http://localhost:8082/exhibitions
+
+###
+
+### 3. 전시회 조회 (ID: 1)
+GET http://localhost:8082/exhibitions/1
+
+###
+
+### 3. 상태별 전시회 조회
+GET http://localhost:8082/exhibitions/status/ACTIVE
+
+###
+
+### 4. 제목으로 전시회 검색
+GET http://localhost:8082/exhibitions/search?title=모네
+
+###
+
+### 5. 모든 작품 조회
+GET http://localhost:8082/artworks
+
+###
+
+### 6. 작품 조회 (ID: 1)
+GET http://localhost:8082/artworks/1
+
+###
+
+### 7. 작품 생성 (관리자) - 전시회 ID: 1 사용
+POST http://localhost:8082/artworks
+Content-Type: application/json
+
+{
+  "title": "해돋이",
+  "description": "인상주의의 대표작으로 알려진 작품입니다.",
+  "artist": "클로드 모네",
+  "creationYear": 1872,
+  "medium": "oil",
+  "style": "impressionism",
+  "imageUrl": "https://example.com/sunrise.jpg",
+  "keywords": "해돋이,인상주의,모네,자연,빛",
+  "exhibitionId": 1
+}
+
+###
+
+### 8. 전시회 수정
+PATCH http://localhost:8082/exhibitions/1
+Content-Type: application/json
+
+{
+  "title": "인상주의 전시회 (수정됨)",
+  "description": "수정된 전시회 설명입니다."
+}
+
+###
+
+### 9. 작품 수정
+PATCH http://localhost:8082/artworks/1
+Content-Type: application/json
+
+{
+  "title": "해돋이 (수정됨)",
+  "description": "수정된 작품 설명입니다."
+}
+
+###
+
+### 10. 전시회별 작품 조회
+GET http://localhost:8082/artworks/exhibition/1
+
+###
+
+### 11. 제목으로 작품 검색
+GET http://localhost:8082/artworks/search/title?title=해돋이
+
+###
+
+### 12. 작가로 작품 검색
+GET http://localhost:8082/artworks/search/artist?artist=모네
+
+###
+
+### 13. 인기 작품 조회 (좋아요 순)
+GET http://localhost:8082/artworks/top/likes
+
+###
+
+### 14. 존재하지 않는 전시회 조회 (에러 테스트)
+GET http://localhost:8082/exhibitions/999
+
+###
+
+### 15. 존재하지 않는 작품 조회 (에러 테스트)
+GET http://localhost:8082/artworks/999
+
+###
+
+### 16. 잘못된 데이터로 전시회 생성 (에러 테스트)
+POST http://localhost:8082/exhibitions
+Content-Type: application/json
+
+{
+  "title": "",
+  "startDate": "2024-01-01T10:00:00",
+  "endDate": "2024-12-31T18:00:00"
+}
+
+###
+
+### 17. 잘못된 데이터로 작품 생성 (에러 테스트)
+POST http://localhost:8082/artworks
+Content-Type: application/json
+
+{
+  "title": "",
+  "exhibitionId": 999
+}
+
+###
+
+### 18. Actuator Health Check
+GET http://localhost:8082/actuator/health
+
+###
+
+### 19. Actuator Info
+GET http://localhost:8082/actuator/info
+
+### 
