@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -14,12 +13,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ArtworkResponse {
     
-    private UUID id;
+    private Long id;
     private String title;
     private String artist;
     private String era;
     private String description;
     private String imageUrl;
-    private UUID exhibitionId;
+    private Long exhibitionId;
     private LocalDateTime createdAt;
 } 

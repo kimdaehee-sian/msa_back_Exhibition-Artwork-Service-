@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,24 +32,22 @@ public class ExhibitionService {
         log.info("전시회 목록 조회 요청");
         List<Exhibition> exhibitions = exhibitionRepository.findAll();
         return exhibitions.stream()
-                .map(this::mapToExhibitionResponse)
+                .map(this::convertToResponse)
                 .collect(Collectors.toList());
     }
     
-    public ExhibitionResponse getExhibitionById(UUID id) {
+    public ExhibitionResponse getExhibitionById(Long id) {
         log.info("전시회 상세 조회 요청: ID={}", id);
-        
         Exhibition exhibition = exhibitionRepository.findById(id)
                 .orElseThrow(() -> new ExhibitionNotFoundException("전시회를 찾을 수 없습니다: " + id));
-        
-        return mapToExhibitionResponse(exhibition);
+        return convertToResponse(exhibition);
     }
     
     @Transactional
     public ExhibitionResponse createExhibition(ExhibitionCreateRequest request) {
         log.info("전시회 생성 요청: {}", request.getTitle());
         
-        // 제목 중복 검증
+        // 제목 중복 체크
         if (exhibitionRepository.existsByTitle(request.getTitle())) {
             throw new DuplicateTitleException("이미 존재하는 전시회 제목입니다: " + request.getTitle());
         }
@@ -65,21 +62,24 @@ public class ExhibitionService {
         Exhibition savedExhibition = exhibitionRepository.save(exhibition);
         log.info("전시회 생성 완료: ID={}, 제목={}", savedExhibition.getId(), savedExhibition.getTitle());
         
-        return mapToExhibitionResponse(savedExhibition);
+        return convertToResponse(savedExhibition);
     }
     
     @Transactional
-    public ExhibitionResponse updateExhibition(UUID id, ExhibitionUpdateRequest request) {
+    public ExhibitionResponse updateExhibition(Long id, ExhibitionUpdateRequest request) {
         log.info("전시회 수정 요청: ID={}", id);
         
         Exhibition exhibition = exhibitionRepository.findById(id)
                 .orElseThrow(() -> new ExhibitionNotFoundException("전시회를 찾을 수 없습니다: " + id));
         
+        // 제목 중복 체크 (자신 제외)
+        if (request.getTitle() != null && 
+            exhibitionRepository.existsByTitleAndIdNot(request.getTitle(), id)) {
+            throw new DuplicateTitleException("이미 존재하는 전시회 제목입니다: " + request.getTitle());
+        }
+        
+        // 수정할 필드들 업데이트
         if (request.getTitle() != null) {
-            // 제목 중복 검증 (자신을 제외한 다른 전시회와 중복 체크)
-            if (exhibitionRepository.existsByTitleAndIdNot(request.getTitle(), id)) {
-                throw new DuplicateTitleException("이미 존재하는 전시회 제목입니다: " + request.getTitle());
-            }
             exhibition.setTitle(request.getTitle());
         }
         if (request.getDescription() != null) {
@@ -95,11 +95,11 @@ public class ExhibitionService {
         Exhibition updatedExhibition = exhibitionRepository.save(exhibition);
         log.info("전시회 수정 완료: ID={}, 제목={}", updatedExhibition.getId(), updatedExhibition.getTitle());
         
-        return mapToExhibitionResponse(updatedExhibition);
+        return convertToResponse(updatedExhibition);
     }
     
     @Transactional
-    public void deleteExhibition(UUID id) {
+    public void deleteExhibition(Long id) {
         log.info("전시회 삭제 요청: ID={}", id);
         
         Exhibition exhibition = exhibitionRepository.findById(id)
@@ -109,13 +109,13 @@ public class ExhibitionService {
         log.info("전시회 삭제 완료: ID={}", id);
     }
     
-    // 🔧 관리자용 API 메서드들
+    // 🔧 관리자 페이지용 메서드들
     
     public List<ExhibitionSummaryResponse> getExhibitionSummaries() {
         log.info("관리자 전시회 목록 조회 요청");
         List<Exhibition> exhibitions = exhibitionRepository.findAll();
         return exhibitions.stream()
-                .map(this::mapToExhibitionSummaryResponse)
+                .map(this::convertToSummaryResponse)
                 .collect(Collectors.toList());
     }
     
@@ -123,11 +123,13 @@ public class ExhibitionService {
         log.info("작품 생성용 전시회 드롭다운 목록 조회 요청");
         List<Exhibition> exhibitions = exhibitionRepository.findAll();
         return exhibitions.stream()
-                .map(this::mapToExhibitionDropdownResponse)
+                .map(this::convertToDropdownResponse)
                 .collect(Collectors.toList());
     }
     
-    private ExhibitionResponse mapToExhibitionResponse(Exhibition exhibition) {
+    // 🔄 변환 메서드들
+    
+    private ExhibitionResponse convertToResponse(Exhibition exhibition) {
         return ExhibitionResponse.builder()
                 .id(exhibition.getId())
                 .title(exhibition.getTitle())
@@ -142,7 +144,7 @@ public class ExhibitionService {
                                 .era(artwork.getEra())
                                 .description(artwork.getDescription())
                                 .imageUrl(artwork.getImageUrl())
-                                .exhibitionId(artwork.getExhibition().getId())
+                                .exhibitionId(exhibition.getId())
                                 .createdAt(artwork.getCreatedAt())
                                 .build())
                         .collect(Collectors.toList()))
@@ -150,20 +152,27 @@ public class ExhibitionService {
                 .build();
     }
     
-    private ExhibitionSummaryResponse mapToExhibitionSummaryResponse(Exhibition exhibition) {
+    private ExhibitionSummaryResponse convertToSummaryResponse(Exhibition exhibition) {
+        // 해당 전시회의 작품 수 계산
+        long artworkCount = artworkRepository.findByExhibitionId(exhibition.getId()).size();
+        
+        // 전시회 상태 결정 (시작일/종료일 기반)
+        String status = determineExhibitionStatus(exhibition.getStartDate(), exhibition.getEndDate());
+        
         return ExhibitionSummaryResponse.builder()
                 .id(exhibition.getId())
                 .title(exhibition.getTitle())
                 .description(exhibition.getDescription())
                 .startDate(exhibition.getStartDate())
                 .endDate(exhibition.getEndDate())
-                .artworkCount(exhibition.getArtworks().size())  // 소속된 작품 수
+                .artworkCount(artworkCount)
                 .createdAt(exhibition.getCreatedAt())
                 .build();
     }
     
-    private ExhibitionDropdownResponse mapToExhibitionDropdownResponse(Exhibition exhibition) {
-        String status = getExhibitionStatus(exhibition);
+    private ExhibitionDropdownResponse convertToDropdownResponse(Exhibition exhibition) {
+        String status = determineExhibitionStatus(exhibition.getStartDate(), exhibition.getEndDate());
+        
         return ExhibitionDropdownResponse.builder()
                 .id(exhibition.getId())
                 .title(exhibition.getTitle())
@@ -171,14 +180,18 @@ public class ExhibitionService {
                 .build();
     }
     
-    private String getExhibitionStatus(Exhibition exhibition) {
-        LocalDate now = LocalDate.now();
-        if (now.isBefore(exhibition.getStartDate())) {
-            return "예정";
-        } else if (now.isAfter(exhibition.getEndDate())) {
-            return "종료";
-        } else {
-            return "진행중";
+    private String determineExhibitionStatus(LocalDate startDate, LocalDate endDate) {
+        LocalDate today = LocalDate.now();
+        
+        if (startDate != null && endDate != null) {
+            if (today.isBefore(startDate)) {
+                return "예정";
+            } else if (today.isAfter(endDate)) {
+                return "종료";
+            } else {
+                return "진행중";
+            }
         }
+        return "미정";
     }
 } 

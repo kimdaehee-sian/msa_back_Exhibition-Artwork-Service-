@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/exhibitions")
@@ -26,7 +25,7 @@ public class ExhibitionController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ExhibitionResponse> getExhibitionById(@PathVariable UUID id) {
+    public ResponseEntity<ExhibitionResponse> getExhibitionById(@PathVariable Long id) {
         log.info("전시회 상세 조회 API 호출: ID={}", id);
         ExhibitionResponse response = exhibitionService.getExhibitionById(id);
         return ResponseEntity.ok(response);

@@ -1,14 +1,17 @@
 package com.guidely.exhibitionservice.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExhibitionDropdownResponse {
-    private UUID id;
+    
+    private Long id;
     private String title;
-    private String status;  // "진행중", "예정", "종료" 등
+    private String status;  // 예정, 진행중, 종료
 } 

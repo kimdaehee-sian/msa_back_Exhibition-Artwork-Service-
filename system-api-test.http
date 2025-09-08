@@ -26,23 +26,23 @@ GET http://localhost:8080/api/artworks
 ### ❌ HTTP 에러 테스트 (ERROR TESTS)
 ################################################################################
 
-### [에러] 5. 잘못된 UUID 형식 - 전시회 (400 Bad Request)
-### 💡 UUID가 아닌 형식의 ID로 요청
-GET http://localhost:8080/api/exhibitions/invalid-uuid
+### [에러] 5. 잘못된 ID 형식 - 전시회 (400 Bad Request)
+### 💡 숫자가 아닌 형식의 ID로 요청
+GET http://localhost:8080/api/exhibitions/invalid-id
 
-### [에러] 6. 잘못된 UUID 형식 - 작품 (400 Bad Request)  
-GET http://localhost:8080/api/artworks/invalid-uuid
+### [에러] 6. 잘못된 ID 형식 - 작품 (400 Bad Request)  
+GET http://localhost:8080/api/artworks/invalid-id
 
 ### [에러] 7. 존재하지 않는 전시회 (404 Not Found)
-### 💡 유효한 UUID 형식이지만 존재하지 않는 ID
-GET http://localhost:8080/api/exhibitions/00000000-0000-0000-0000-000000000000
+### 💡 유효한 숫자 형식이지만 존재하지 않는 ID
+GET http://localhost:8080/api/exhibitions/99999
 
 ### [에러] 8. 존재하지 않는 작품 (404 Not Found)
-GET http://localhost:8080/api/artworks/00000000-0000-0000-0000-000000000000
+GET http://localhost:8080/api/artworks/99999
 
 ### [에러] 9. 존재하지 않는 전시회의 작품 조회 (빈 배열 반환)
 ### 💡 전시회 ID는 존재하지 않지만 에러가 아닌 빈 배열 반환
-GET http://localhost:8080/api/artworks/exhibition/00000000-0000-0000-0000-000000000000
+GET http://localhost:8080/api/artworks/exhibition/99999
 
 ################################################################################
 ### ❌ 비즈니스 로직 에러 테스트
@@ -58,7 +58,7 @@ Content-Type: application/json
   "era": "현대",
   "description": "존재하지 않는 전시회에 작품 생성 테스트",
   "imageUrl": "https://example.com/test.jpg",
-  "exhibitionId": "00000000-0000-0000-0000-000000000000"
+  "exhibitionId": 99999
 }
 
 ### [에러] 11. 전시회 제목 중복 생성 시도 (409 Conflict)
@@ -67,7 +67,7 @@ POST http://localhost:8080/api/admin/exhibitions
 Content-Type: application/json
 
 {
-  "title": "사용자 API 테스트 전시회",
+  "title": "레오나르도 다 빈치 특별전 2025",
   "description": "이미 존재하는 제목으로 생성 시도",
   "startDate": "2025-01-01",
   "endDate": "2025-12-31"
@@ -79,12 +79,12 @@ POST http://localhost:8080/api/admin/artworks
 Content-Type: application/json
 
 {
-  "title": "사용자 API 테스트 작품",
+  "title": "모나리자",
   "artist": "중복 테스트",
   "era": "테스트",
   "description": "이미 존재하는 작품 제목으로 생성 시도",
   "imageUrl": "https://example.com/duplicate-test.jpg",
-  "exhibitionId": "124ecc7f-186c-474e-8f2d-925f3fffd122"
+  "exhibitionId": 1
 }
 
 ################################################################################
@@ -108,7 +108,7 @@ Content-Type: application/json
 {
   "artist": "작가명만 있음",
   "era": "현대",
-  "exhibitionId": "124ecc7f-186c-474e-8f2d-925f3fffd122"
+  "exhibitionId": 1
 }
 
 ### [에러] 15. 잘못된 날짜 형식 (400 Bad Request)

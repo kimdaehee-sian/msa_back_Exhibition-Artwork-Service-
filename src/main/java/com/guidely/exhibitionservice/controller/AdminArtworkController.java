@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/artworks")
@@ -43,7 +42,7 @@ public class AdminArtworkController {
     
     @PatchMapping("/{id}")
     public ResponseEntity<ArtworkResponse> updateArtwork(
-            @PathVariable UUID id, 
+            @PathVariable Long id, 
             @Valid @RequestBody ArtworkUpdateRequest request) {
         log.info("관리자 작품 수정 API 호출: ID={}", id);
         ArtworkResponse response = artworkService.updateArtwork(id, request);
@@ -51,7 +50,7 @@ public class AdminArtworkController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteArtwork(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteArtwork(@PathVariable Long id) {
         log.info("관리자 작품 삭제 API 호출: ID={}", id);
         artworkService.deleteArtwork(id);
         return ResponseEntity.noContent().build();

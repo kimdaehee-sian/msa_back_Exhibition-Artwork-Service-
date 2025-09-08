@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -16,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ExhibitionResponse {
     
-    private UUID id;
+    private Long id;
     private String title;
     private String description;
     private LocalDate startDate;

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/exhibitions")
@@ -51,7 +50,7 @@ public class AdminExhibitionController {
     
     @PatchMapping("/{id}")
     public ResponseEntity<ExhibitionResponse> updateExhibition(
-            @PathVariable UUID id, 
+            @PathVariable Long id, 
             @Valid @RequestBody ExhibitionUpdateRequest request) {
         log.info("관리자 전시회 수정 API 호출: ID={}", id);
         ExhibitionResponse response = exhibitionService.updateExhibition(id, request);
@@ -59,7 +58,7 @@ public class AdminExhibitionController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExhibition(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteExhibition(@PathVariable Long id) {
         log.info("관리자 전시회 삭제 API 호출: ID={}", id);
         exhibitionService.deleteExhibition(id);
         return ResponseEntity.noContent().build();

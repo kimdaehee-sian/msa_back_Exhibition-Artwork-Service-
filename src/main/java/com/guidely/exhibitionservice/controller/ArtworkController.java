@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/artworks")
@@ -26,14 +25,14 @@ public class ArtworkController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ArtworkResponse> getArtworkById(@PathVariable UUID id) {
+    public ResponseEntity<ArtworkResponse> getArtworkById(@PathVariable Long id) {
         log.info("작품 상세 조회 API 호출: ID={}", id);
         ArtworkResponse response = artworkService.getArtworkById(id);
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/exhibition/{exhibitionId}")
-    public ResponseEntity<List<ArtworkResponse>> getArtworksByExhibitionId(@PathVariable UUID exhibitionId) {
+    public ResponseEntity<List<ArtworkResponse>> getArtworksByExhibitionId(@PathVariable Long exhibitionId) {
         log.info("전시회별 작품 목록 조회 API 호출: 전시회 ID={}", exhibitionId);
         List<ArtworkResponse> responses = artworkService.getArtworksByExhibitionId(exhibitionId);
         return ResponseEntity.ok(responses);
