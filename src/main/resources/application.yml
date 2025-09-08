@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: exhibition-service
+  
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: false  # 보안상 비활성화
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false  # 운영환경에서는 비활성화
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.H2Dialect
+  
+  # MySQL 설정 (실제 운영 환경용)
+  # datasource:
+  #   url: jdbc:mysql://localhost:3306/guidely_exhibition_db?useSSL=false&serverTimezone=UTC
+  #   driver-class-name: com.mysql.cj.jdbc.Driver
+  #   username: root
+  #   password: password
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: update
+  #   properties:
+  #     hibernate:
+  #       dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    com.guidely.exhibitionservice: INFO
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE 
