@@ -68,53 +68,53 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 ---
-# Azure 프로덕션 프로필 (MySQL)
-spring:
-  config:
-    activate:
-      on-profile: azure
+# # Azure 프로덕션 프로필 (MySQL)
+# spring:
+#   config:
+#     activate:
+#       on-profile: azure
   
-  datasource:
-    url: ${DATABASE_URL}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      connection-timeout: 30000
+#   datasource:
+#     url: ${DATABASE_URL}
+#     driver-class-name: com.mysql.cj.jdbc.Driver
+#     username: ${DB_USERNAME}
+#     password: ${DB_PASSWORD}
+#     hikari:
+#       maximum-pool-size: 10
+#       minimum-idle: 2
+#       connection-timeout: 30000
   
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+#   jpa:
+#     hibernate:
+#       ddl-auto: validate
+#     show-sql: false
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.MySQLDialect
 
-logging:
-  level:
-    com.guidely.exhibitionservice: INFO
-    org.springframework.web: WARN
-    org.hibernate.SQL: ERROR
+# logging:
+#   level:
+#     com.guidely.exhibitionservice: INFO
+#     org.springframework.web: WARN
+#     org.hibernate.SQL: ERROR
 
----
-# Docker 개발 환경 (MySQL 유지)
-spring:
-  config:
-    activate:
-      on-profile: docker
+# ---
+# # Docker 개발 환경 (MySQL 유지)
+# spring:
+#   config:
+#     activate:
+#       on-profile: docker
   
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/exhibition_db}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:password}
+#   datasource:
+#     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/exhibition_db}
+#     driver-class-name: com.mysql.cj.jdbc.Driver
+#     username: ${SPRING_DATASOURCE_USERNAME:root}
+#     password: ${SPRING_DATASOURCE_PASSWORD:password}
   
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect 
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: false
+#     properties:
+#       hibernate:
+#         dialect: org.hibernate.dialect.MySQLDialect 

@@ -49,7 +49,7 @@ GET http://localhost:8080/api/admin/artworks/summaries
 
 ### [관리자] 7. 작품 생성 - 실제 존재하는 전시회 ID 사용
 ### 👆 위의 전시회 드롭다운에서 전시회 ID를 선택하세요
-POST http://localhost:8080/api/admin/artworks/1
+POST http://localhost:8080/api/admin/artworks
 Content-Type: application/json
 
 {

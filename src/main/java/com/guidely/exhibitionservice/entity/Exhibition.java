@@ -43,6 +43,6 @@ public class Exhibition {
     private List<Artwork> artworks = new ArrayList<>();
     
     @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 } 
