@@ -27,7 +27,7 @@ Content-Type: application/json
 
 ### [관리자] 4. 전시회 수정 - 실제 존재하는 ID 사용
 ### 👆 위의 요약 목록에서 ID를 복사해서 사용하세요
-PATCH http://localhost:8080/api/admin/exhibitions/124ecc7f-186c-474e-8f2d-925f3fffd122
+PATCH http://localhost:8080/api/admin/exhibitions/1
 Content-Type: application/json
 
 {
@@ -37,7 +37,7 @@ Content-Type: application/json
 
 ### [관리자] 5. 전시회 삭제 - 실제 존재하는 ID 사용
 ### 👆 위의 요약 목록에서 ID를 복사해서 사용하세요
-DELETE http://localhost:8080/api/admin/exhibitions/89633800-cefb-4008-b6b8-076a2f523c86
+DELETE http://localhost:8080/api/admin/exhibitions/2
 
 ################################################################################
 ### 🎨 관리자 작품 관리  
@@ -49,7 +49,7 @@ GET http://localhost:8080/api/admin/artworks/summaries
 
 ### [관리자] 7. 작품 생성 - 실제 존재하는 전시회 ID 사용
 ### 👆 위의 전시회 드롭다운에서 전시회 ID를 선택하세요
-POST http://localhost:8080/api/admin/artworks/124ecc7f-186c-474e-8f2d-925f3fffd122
+POST http://localhost:8080/api/admin/artworks/1
 Content-Type: application/json
 
 {
@@ -58,12 +58,12 @@ Content-Type: application/json
   "era": "르네상스",
   "description": "세계에서 가장 유명한 초상화 작품입니다.",
   "imageUrl": "https://example.com/monalisa.jpg",
-  "exhibitionId": "89633800-cefb-4008-b6b8-076a2f523c86"
+  "exhibitionId": 1
 }
 
 ### [관리자] 8. 작품 수정
 ### 👆 위의 작품 요약 목록에서 ID를 복사해서 사용하세요
-PATCH http://localhost:8080/api/admin/artworks/184a3822-2482-40e7-b092-c91508f44c19
+PATCH http://localhost:8080/api/admin/artworks/1
 Content-Type: application/json
 
 {
@@ -73,7 +73,7 @@ Content-Type: application/json
 
 ### [관리자] 9. 작품 삭제
 ### 👆 위의 작품 요약 목록에서 ID를 복사해서 사용하세요
-DELETE http://localhost:8080/api/admin/artworks/184a3822-2482-40e7-b092-c91508f44c19
+DELETE http://localhost:8080/api/admin/artworks/1
 
 ################################################################################
 ### 🧪 중복 검증 테스트 (관리자)
@@ -100,7 +100,7 @@ Content-Type: application/json
   "era": "테스트",
   "description": "이미 존재하는 작품 제목으로 생성 시도",
   "imageUrl": "https://example.com/duplicate-test.jpg",
-  "exhibitionId": "{{exhibitionId}}"
+  "exhibitionId": 1
 }
 
 ### [테스트] 12. 존재하지 않는 전시회에 작품 생성 시도 (404 Not Found 예상)
@@ -113,5 +113,5 @@ Content-Type: application/json
   "era": "현대",
   "description": "존재하지 않는 전시회에 작품 생성 테스트",
   "imageUrl": "https://example.com/test.jpg",
-  "exhibitionId": "00000000-0000-0000-0000-000000000000"
+  "exhibitionId": 999
 } 
