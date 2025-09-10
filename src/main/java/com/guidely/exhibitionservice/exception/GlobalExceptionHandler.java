@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,7 +64,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        
+        // Swagger UI 관련 경로는 예외 처리하지 않음 (기본 Spring Boot 처리)
+        if (requestURI.contains("/swagger-ui") || 
+            requestURI.contains("/v3/api-docs") || 
+            requestURI.contains("/webjars") ||
+            requestURI.contains("/swagger-resources")) {
+            throw ex; // 다시 던져서 Spring Boot 기본 처리에 맡김
+        }
+        
         log.error("리소스를 찾을 수 없습니다: {}", ex.getMessage());
         
         String message = "요청한 API 엔드포인트를 찾을 수 없습니다";

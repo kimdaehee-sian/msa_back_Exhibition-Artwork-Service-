@@ -2,6 +2,9 @@ package com.guidely.exhibitionservice.controller;
 
 import com.guidely.exhibitionservice.dto.ExhibitionResponse;
 import com.guidely.exhibitionservice.service.ExhibitionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +16,13 @@ import java.util.List;
 @RequestMapping("/api/exhibitions")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Exhibition", description = "전시회 API")
 public class ExhibitionController {
     
     private final ExhibitionService exhibitionService;
     
     @GetMapping
+    @Operation(summary = "전시회 목록 조회", description = "모든 전시회 목록을 조회합니다.")
     public ResponseEntity<List<ExhibitionResponse>> getAllExhibitions() {
         log.info("전시회 목록 조회 API 호출");
         List<ExhibitionResponse> responses = exhibitionService.getAllExhibitions();

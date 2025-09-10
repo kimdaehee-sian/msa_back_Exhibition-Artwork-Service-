@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -72,7 +71,7 @@ class ExhibitionServiceApplicationTests {
 
 		// 생성된 전시회 ID 추출
 		String responseContent = createResult.getResponse().getContentAsString();
-		String exhibitionId = objectMapper.readTree(responseContent).get("id").asText();
+		Long exhibitionId = objectMapper.readTree(responseContent).get("id").asLong();
 
 		// 3. 전시회 상세 조회 (200 OK)
 		System.out.println("=== 전시회 상세 조회 API 테스트 ===");
@@ -103,7 +102,7 @@ class ExhibitionServiceApplicationTests {
 				"르네상스",
 				"유명한 초상화 작품입니다.",
 				"https://example.com/monalisa.jpg",
-				UUID.fromString(exhibitionId)
+				exhibitionId
 		);
 
 		MvcResult artworkCreateResult = mockMvc.perform(post("/api/admin/artworks")
@@ -117,7 +116,7 @@ class ExhibitionServiceApplicationTests {
 
 		// 생성된 작품 ID 추출
 		String artworkResponseContent = artworkCreateResult.getResponse().getContentAsString();
-		String artworkId = objectMapper.readTree(artworkResponseContent).get("id").asText();
+		Long artworkId = objectMapper.readTree(artworkResponseContent).get("id").asLong();
 
 		// 6. 작품 목록 조회 (200 OK)
 		System.out.println("=== 작품 목록 조회 API 테스트 ===");
