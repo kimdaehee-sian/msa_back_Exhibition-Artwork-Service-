@@ -23,8 +23,23 @@ spring:
         format_sql: false
         dialect: org.hibernate.dialect.MySQLDialect
 
+  # CORS 설정
+  web:
+    cors:
+      allow-credentials: true
+      allowed-origin-patterns: "*"
+      allowed-headers: "*"
+      allowed-methods: "*"
+
 server:
   port: ${PORT:8080}
+
+# SpringDoc OpenAPI 설정
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    csrf:
+      enabled: false
 
 management:
   endpoints:
