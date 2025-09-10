@@ -67,12 +67,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         
-        // Swagger UI 관련 경로는 예외 처리하지 않음 (기본 Spring Boot 처리)
+        // Swagger UI 관련 경로는 예외 처리하지 않고 기본 Spring Boot 404 처리
         if (requestURI.contains("/swagger-ui") || 
             requestURI.contains("/v3/api-docs") || 
             requestURI.contains("/webjars") ||
             requestURI.contains("/swagger-resources")) {
-            throw ex; // 다시 던져서 Spring Boot 기본 처리에 맡김
+            // Swagger 경로는 Spring Boot 기본 404 응답으로 처리
+            return ResponseEntity.notFound().build();
         }
         
         log.error("리소스를 찾을 수 없습니다: {}", ex.getMessage());
