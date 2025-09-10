@@ -24,7 +24,7 @@ public class SwaggerConfig {
                                 .email("contact@guidely.com")))
                 .servers(List.of(
                         new Server().url("http://localhost:8080").description("로컬 개발 서버"),
-                        new Server().url("https://your-app-name.azurewebsites.net").description("Azure 프로덕션 서버")
+                        new Server().url("https://guidely-exhibition-artwork-services-dmeagqebfud4e7hh.koreacentral-01.azurewebsites.net").description("Azure 프로덕션 서버")
                 ));
     }
 } 
